@@ -57,15 +57,15 @@
       </div>
     </header>
 
-    <!-- GATEKEEPER AUTH WALL (Locked until register/login, saved permanently) -->
+    <!-- AUTHENTICATION GATEKEEPER VIEW -->
     <section id="view-auth" class="flex-1 flex flex-col justify-center px-4 py-8">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <div class="text-center mb-6">
           <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 to-red-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg mb-3">
             <i data-lucide="flame" class="w-9 h-9 text-white fill-white"></i>
           </div>
-          <h2 class="text-2xl font-black tracking-wide font-gaming text-white uppercase">Welcome to Xd Store</h2>
-          <p class="text-xs text-slate-400 mt-1">Sign in once for permanent access across sessions</p>
+          <h2 class="text-2xl font-black tracking-wide font-gaming text-white uppercase">Welcome to XD Laka Store</h2>
+          <p class="text-xs text-slate-400 mt-1">Sign in once to stay logged in permanently on this device</p>
         </div>
 
         <!-- Auth Tabs Switcher -->
@@ -108,11 +108,11 @@
             <input type="text" id="regFirstName" required placeholder="First name" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
             <input type="text" id="regLastName" required placeholder="Last name" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           </div>
-          <input type="text" id="regUsername" required placeholder="Create username" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
+          <input type="text" id="regUsername" required placeholder="Choose username" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           <input type="email" id="regEmail" required placeholder="Email address" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           
           <div class="relative">
-            <input type="password" id="regPassword" required placeholder="Password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500 pr-10">
+            <input type="password" id="regPassword" required placeholder="Create password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500 pr-10">
             <button type="button" onclick="togglePasswordVisibility('regPassword', 'regEyeIcon')" class="absolute right-3 top-2.5 text-slate-400">
               <i id="regEyeIcon" data-lucide="eye" class="w-4 h-4"></i>
             </button>
@@ -120,7 +120,7 @@
           <input type="password" id="regConfirmPassword" required placeholder="Confirm password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
 
           <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 py-3 rounded-xl font-black text-sm shadow-lg shadow-red-950 flex items-center justify-center gap-2 text-white mt-1">
-            <i data-lucide="flame" class="w-4 h-4"></i> Create Permanent Account
+            <i data-lucide="flame" class="w-4 h-4"></i> Create Account
           </button>
         </form>
       </div>
@@ -128,7 +128,6 @@
 
     <!-- VIEW: HOME PAGE -->
     <main id="view-home" class="hidden flex-1 px-4 py-5 space-y-5">
-      <!-- HERO CARD WITH BADGES -->
       <div class="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/90 rounded-3xl p-5 shadow-2xl text-center space-y-3">
         <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-3 py-1 rounded-full uppercase tracking-wider">
           <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Trusted & Safe
@@ -136,7 +135,7 @@
         <h2 class="text-3xl font-black tracking-tight text-white font-gaming">FREE FIRE ID SELL</h2>
         <p class="text-xs text-slate-400 leading-relaxed">Get Your Dream Account Today! Rare Skins | High Level | Instant Credentials</p>
 
-        <!-- Trust Badges From Design Screenshot -->
+        <!-- Trust Badges -->
         <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800">
           <div class="flex flex-col items-center">
             <i data-lucide="zap" class="w-4 h-4 text-amber-500 mb-1"></i>
@@ -167,7 +166,7 @@
         </button>
       </div>
 
-      <!-- Admin Control Panel (Visible only when Admin PIN is entered) -->
+      <!-- Admin Control Panel -->
       <div id="adminPanelBox" class="hidden bg-slate-900 border border-red-500/30 rounded-2xl p-4 space-y-3">
         <div class="flex items-center justify-between">
           <h3 class="text-xs font-black text-red-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -185,7 +184,7 @@
         </div>
       </div>
 
-      <!-- REQUIREMENT 1: JO ID POST HO VO HOME SCREEN PAR BHI DIKHE -->
+      <!-- FEATURE: POSTED IDS SHOW ON HOME SCREEN AT BOTTOM -->
       <div class="pt-4 border-t border-slate-800/80 space-y-3">
         <div class="flex justify-between items-center px-1">
           <div class="flex items-center gap-1.5">
@@ -195,7 +194,6 @@
           <span id="homeTotalIdsBadge" class="text-[11px] font-mono bg-slate-900 border border-slate-800 px-2 py-0.5 rounded-md text-amber-400 font-bold">0 IDs</span>
         </div>
 
-        <!-- Container where all IDs appear dynamically on the home page -->
         <div id="homeIdListContainer" class="space-y-4"></div>
       </div>
     </main>
@@ -249,7 +247,7 @@
       <div id="proofsContainer" class="space-y-4"></div>
     </section>
 
-    <!-- APP FOOTER -->
+    <!-- FOOTER -->
     <footer id="appFooter" class="mt-8 border-t border-slate-900 bg-slate-950 px-4 py-6 text-center space-y-4">
       <div class="grid grid-cols-2 gap-3 text-left max-w-md mx-auto">
         <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80">
@@ -300,7 +298,7 @@
           </button>
         </div>
 
-        <!-- Step 2: Verification Pending with WhatsApp OTP link -->
+        <!-- Step 2: Verification Pending with WhatsApp link -->
         <div id="checkoutStepPending" class="hidden text-center py-5 space-y-3">
           <div class="animate-spin w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full mx-auto"></div>
           <h4 class="font-bold text-sm text-slate-200">Payment Submitted for Verification!</h4>
@@ -312,7 +310,7 @@
             <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> Message on WhatsApp for OTP
           </a>
 
-          <!-- Admin Instant Approval / Rejection Simulator -->
+          <!-- Admin Simulation Control -->
           <div id="adminApproveSection" class="bg-slate-950 border border-slate-800 p-3 rounded-xl mt-4 text-left">
             <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Admin Approval Action (Simulation)</span>
             <div class="flex gap-2">
@@ -326,14 +324,34 @@
           </div>
         </div>
 
-        <!-- Step 3: Approved Credentials Display -->
+        <!-- Step 3: Approved Credentials Display with Prominent 'GET OTP' Button -->
         <div id="checkoutStepApproved" class="hidden text-center py-4 space-y-3">
           <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-500 mx-auto"></i>
           <h4 class="font-bold text-base text-emerald-400">Payment Verified ✅</h4>
-          <p class="text-xs text-slate-300">Here are your Free Fire ID Fakemail credentials. Save them immediately:</p>
-          <div class="bg-slate-950 border border-emerald-500/40 p-3 rounded-xl text-left select-all">
-            <p class="text-[10px] text-slate-400 font-bold mb-1">FAKEMAIL & PASSWORD:</p>
-            <code id="revealedCredentials" class="text-xs text-emerald-300 font-mono break-all"></code>
+          <p class="text-xs text-slate-300">Your Free Fire ID Fakemail credentials provided by admin:</p>
+          
+          <!-- Exact Fakemail from ID Post -->
+          <div class="bg-slate-950 border border-emerald-500/40 p-3.5 rounded-2xl text-left select-all">
+            <div class="flex items-center justify-between mb-1">
+              <p class="text-[10px] text-slate-400 font-bold uppercase">FAKEMAIL & PASSWORD:</p>
+              <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded font-mono">Ready to Login</span>
+            </div>
+            <code id="revealedCredentials" class="text-xs text-emerald-300 font-mono break-all font-bold block bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"></code>
+          </div>
+
+          <!-- Notice & Direct WhatsApp OTP Button -->
+          <div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-2xl text-left space-y-2">
+            <div class="flex items-center gap-1.5 text-amber-400 font-bold text-xs">
+              <i data-lucide="key" class="w-3.5 h-3.5"></i>
+              <span>Login OTP Required</span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-snug">
+              To complete the login with this account, tap the button below to get your Login OTP instantly from admin on WhatsApp.
+            </p>
+            
+            <a id="directGetOtpWhatsappBtn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg tracking-wide uppercase transition transform active:scale-95">
+              <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> GET OTP (+91 7978404391)
+            </a>
           </div>
         </div>
 
@@ -349,7 +367,7 @@
       </div>
     </div>
 
-    <!-- REQUIREMENT 3: ADMIN LIST ID MODAL WITH 10+ PHOTO BATCH UPLOAD -->
+    <!-- ADMIN LIST ID MODAL WITH 10+ PHOTO BATCH UPLOAD -->
     <div id="listModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
       <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-5 space-y-3 max-h-[90vh] overflow-y-auto">
         <h3 class="font-black text-sm text-amber-500 font-gaming uppercase tracking-wider">LIST FREE FIRE ID (ADMIN)</h3>
@@ -483,6 +501,7 @@
     let currentView = 'home';
     let selectedBudget = null;
     let currentSelectedIdForPayment = null;
+    let currentSubmittedUTR = "";
 
     let listings = [];
     let proofs = [];
@@ -561,7 +580,7 @@
       }
     }
 
-    // REQUIREMENT 3: HTML5 Canvas Image Compressor (Compreses 4MB phone images to ~30-40KB)
+    // Canvas Image Compressor (Compreses 4MB phone images to ~30-40KB)
     function compressImageFile(file, maxWidth = 800, quality = 0.6) {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -591,7 +610,7 @@
       });
     }
 
-    // Multiple file upload handler (Can be called multiple times to accumulate 10, 15, 20+ photos)
+    // Batch photo upload handler (Permits 10, 15, 20+ photos)
     async function handleBatchPhotoUpload(e) {
       const files = Array.from(e.target.files);
       if (!files.length) return;
@@ -605,7 +624,7 @@
       }
 
       spinner.classList.add('hidden');
-      document.getElementById('batchPhotoInput').value = ''; // Reset input to permit subsequent clicks
+      document.getElementById('batchPhotoInput').value = '';
       renderMultiThumbnails();
     }
 
@@ -691,11 +710,11 @@
       
       closeModal('previewModal');
       closeModal('listModal');
-      alert(`Free Fire ID with ${newId.images.length} screenshots successfully listed on Xd Laka Store!`);
+      alert(`Free Fire ID with ${newId.images.length} screenshots successfully listed on XD Laka Store!`);
       renderApp();
     }
 
-    // REQUIREMENT 2: ADMIN KO POST DELETE KA OPTION MILE
+    // Admin Delete Listing Post
     function deleteListing(id) {
       if (!isAdmin) return alert('Admin access required.');
       const confirmDelete = confirm('Are you sure you want to permanently delete this Free Fire ID?');
@@ -704,6 +723,18 @@
         saveListings();
         renderApp();
         alert('Listing deleted successfully!');
+      }
+    }
+
+    // Admin Delete Proof
+    function deleteProof(id) {
+      if (!isAdmin) return alert('Admin access required.');
+      const confirmDelete = confirm('Are you sure you want to permanently delete this Customer Proof?');
+      if (confirmDelete) {
+        proofs = proofs.filter(item => item.id !== id);
+        saveProofs();
+        renderApp();
+        alert('Customer Proof deleted successfully!');
       }
     }
 
@@ -836,7 +867,7 @@
       window.open(`https://t.me/xdlakastore`, '_blank');
     }
 
-    // Generates the Account Card markup with 10+ image carousel and Admin Delete/Sold options
+    // Card Renderer with Carousel & Admin Delete/Sold options
     function generateIdCardHTML(item) {
       const imgs = (item.images && item.images.length > 0) ? item.images : [item.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80'];
       const currentIndex = carouselIndexTracker[item.id] || 0;
@@ -876,7 +907,6 @@
 
             ${isAdmin ? `
               <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
-                <!-- REQUIREMENT 2: Admin Delete Post Button -->
                 <button onclick="deleteListing(${item.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
                   <i data-lucide="trash-2" class="w-3 h-3"></i> Delete Post
                 </button>
@@ -961,7 +991,7 @@
 
       if (currentView === 'home') {
         homeView.classList.remove('hidden');
-        renderHomeIdList(); // REQUIREMENT 1: RENDER ON HOME SCREEN
+        renderHomeIdList();
       } else if (currentView === 'budget_chart') {
         budgetChartView.classList.remove('hidden');
         renderBudgetCategories();
@@ -976,7 +1006,7 @@
       lucide.createIcons();
     }
 
-    // REQUIREMENT 1: Render all posted IDs directly on the Home Screen at the bottom
+    // Render all posted IDs directly on the Home Screen at the bottom
     function renderHomeIdList() {
       const container = document.getElementById('homeIdListContainer');
       document.getElementById('homeTotalIdsBadge').innerText = `${listings.length} IDs Available`;
@@ -1034,6 +1064,7 @@
       lucide.createIcons();
     }
 
+    // Customer Proofs with Admin Delete Proof Option
     function renderCustomerProofs() {
       const container = document.getElementById('proofsContainer');
       container.innerHTML = '';
@@ -1052,6 +1083,14 @@
             <span class="font-bold text-slate-200">${p.title}</span>
             <span class="text-[10px] text-slate-500">${p.date}</span>
           </div>
+
+          ${isAdmin ? `
+            <div class="pt-2 border-t border-slate-800 flex justify-end">
+              <button onclick="deleteProof(${p.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
+                <i data-lucide="trash-2" class="w-3 h-3"></i> Delete Proof
+              </button>
+            </div>
+          ` : ''}
         `;
         container.appendChild(div);
       });
@@ -1090,11 +1129,12 @@
     function submitUTRVerification() {
       const utr = document.getElementById('utrInputField').value.trim();
       if (utr.length < 8) return alert('Please enter a valid 12-digit UTR transaction number');
+      currentSubmittedUTR = utr;
 
       document.getElementById('checkoutStepQR').classList.add('hidden');
       document.getElementById('checkoutStepPending').classList.remove('hidden');
 
-      const msg = `Hello Xd Laka Store, I have paid ₹${currentSelectedIdForPayment.price} for Free Fire ID #${currentSelectedIdForPayment.id}. My UTR is: ${utr}. Please send my Login OTP and credentials.`;
+      const msg = `Hello XD Laka Store, I have paid ₹${currentSelectedIdForPayment.price} for Free Fire ID #${currentSelectedIdForPayment.id}. My UTR is: ${utr}. Please send my Login OTP and credentials.`;
       document.getElementById('whatsappOtpLink').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
       lucide.createIcons();
     }
@@ -1102,7 +1142,13 @@
     function setPaymentVerdict(verdict) {
       document.getElementById('checkoutStepPending').classList.add('hidden');
       if (verdict === 'approved') {
+        // Show exact fakemail provided during post
         document.getElementById('revealedCredentials').innerText = currentSelectedIdForPayment.fakemail;
+
+        // Configure direct 'GET OTP' WhatsApp link to +917978404391
+        const otpMsg = `Hello XD Laka Store, my payment of ₹${currentSelectedIdForPayment.price} for Free Fire ID #${currentSelectedIdForPayment.id} (UTR: ${currentSubmittedUTR || 'Verified'}) is approved. Here is my fakemail: ${currentSelectedIdForPayment.fakemail}. Please send my Login OTP right now!`;
+        document.getElementById('directGetOtpWhatsappBtn').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(otpMsg)}`;
+
         document.getElementById('checkoutStepApproved').classList.remove('hidden');
       } else {
         document.getElementById('checkoutStepRejected').classList.remove('hidden');
@@ -1115,7 +1161,7 @@
       document.getElementById('checkoutStepQR').classList.remove('hidden');
     }
 
-    // Modal Display Utilities
+    // Modal Helpers
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
       lucide.createIcons();
@@ -1126,5 +1172,4 @@
   </script>
 </body>
 </html>
-```
 ```
