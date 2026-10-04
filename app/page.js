@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
-  Flame, Lock, Mail, Eye, EyeOff, ShieldCheck, 
+  Flame, Lock, Eye, EyeOff, ShieldCheck, 
   ArrowLeft, CheckCircle2, XCircle, Send, PlusCircle, 
-  Tag, Image as ImageIcon, Check 
+  Tag, Image as ImageIcon 
 } from 'lucide-react';
 
 const BUDGET_RANGES = [
@@ -22,7 +22,7 @@ export default function App() {
 
   // Authentication State
   const [user, setUser] = useState(null);
-  const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
+  const [authTab, setAuthTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -40,14 +40,16 @@ export default function App() {
   const [listings, setListings] = useState([]);
   const [proofs, setProofs] = useState([]);
 
-  // Modals & Inputs
+  // Admin Listing Modal & Fields (Single Description + Fakemail)
   const [showListModal, setShowListModal] = useState(false);
-  const [showProofModal, setShowProofModal] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [newPrice, setNewPrice] = useState('');
-  const [newDetails, setNewDetails] = useState('');
-  const [newCreds, setNewCreds] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const [newFakemail, setNewFakemail] = useState('');
   const [newImageBase64, setNewImageBase64] = useState('');
+
+  // Proof Modal
+  const [showProofModal, setShowProofModal] = useState(false);
   const [proofTitle, setProofTitle] = useState('');
   const [proofImageBase64, setProofImageBase64] = useState('');
 
@@ -56,7 +58,7 @@ export default function App() {
   const [utrInput, setUtrInput] = useState('');
   const [paymentStatus, setPaymentStatus] = useState(null);
 
-  // Load lifetime data from browser on start
+  // Load lifetime data from localStorage
   useEffect(() => {
     const savedUser = localStorage.getItem('xd_user');
     const savedAdmin = localStorage.getItem('xd_admin');
@@ -71,10 +73,9 @@ export default function App() {
       const defaultListings = [
         {
           id: 1,
-          title: 'Level 72 | Cobra MP40 Max | Evo ID',
+          description: 'Level 72 | Cobra MP40 Max | 5 Evo Weapons | Old Bundles',
           price: 2400,
-          details: 'Old verified ID with 5 Evo Max weapons and Gmail login.',
-          credentials: 'ff_player72@gmail.com / CobraMax@123',
+          fakemail: 'ff_fakemail_player72@fakemail.com / Pass@123',
           image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80',
           sold: false
         }
@@ -88,7 +89,7 @@ export default function App() {
     }
   }, []);
 
-  // Helper for direct mobile image upload (converts file to Base64)
+  // Mobile image upload handler
   const handleFileUpload = (e, callback) => {
     const file = e.target.files[0];
     if (file) {
@@ -122,10 +123,10 @@ export default function App() {
     setCurrentPage('home');
   };
 
-  // Admin Unlocker
+  // Admin PIN Unlocker (Edit PIN here: line 125)
   const toggleAdmin = () => {
     const pin = prompt('Enter Admin PIN:');
-    if (pin && pin.trim() === 'lakha76') {
+    if (pin && pin.trim().toLowerCase() === 'xdadmin123') {
       setIsAdmin(true);
       localStorage.setItem('xd_admin', 'true');
       alert('Admin Access Granted!');
@@ -134,18 +135,18 @@ export default function App() {
     }
   };
 
-  // Add Listing
-  const handleCreateListing = (e) => {
-    e.preventDefault();
-    if (!newImageBase64) return alert('Please select account screenshots from your gallery!');
+  // Final Publish from Admin Form or Preview
+  const handleConfirmAndPublish = () => {
+    if (!newPrice || !newDescription || !newFakemail || !newImageBase64) {
+      return alert('Please fill Price, Description, Add Fakemail and choose Photo.');
+    }
 
     const updated = [
       {
         id: Date.now(),
-        title: newTitle,
+        description: newDescription,
         price: Number(newPrice),
-        details: newDetails,
-        credentials: newCreds,
+        fakemail: newFakemail,
         image: newImageBase64,
         sold: false
       },
@@ -154,23 +155,23 @@ export default function App() {
 
     setListings(updated);
     localStorage.setItem('xd_listings', JSON.stringify(updated));
+    setShowPreviewModal(false);
     setShowListModal(false);
-    setNewTitle('');
     setNewPrice('');
-    setNewDetails('');
-    setNewCreds('');
+    setNewDescription('');
+    setNewFakemail('');
     setNewImageBase64('');
-    alert('ID Successfully Listed!');
+    alert('ID Successfully Listed on Xd Laka Store!');
   };
 
-  // Mark as Sold (Admin)
+  // Toggle Sold Status
   const toggleSoldStatus = (id) => {
     const updated = listings.map((item) => (item.id === id ? { ...item, sold: !item.sold } : item));
     setListings(updated);
     localStorage.setItem('xd_listings', JSON.stringify(updated));
   };
 
-  // Add Proof (Admin)
+  // Admin Create Proof
   const handleCreateProof = (e) => {
     e.preventDefault();
     if (!proofImageBase64) return alert('Please select proof photo from gallery!');
@@ -188,12 +189,11 @@ export default function App() {
     alert('Proof Added Successfully!');
   };
 
-  // 1. HARD GATEKEEPER: Video-Style Login & Registration Wall
+  // 1. GATEKEEPER: Authentication View
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-center px-4 py-8">
         <div className="max-w-md w-full mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-          {/* Header Card */}
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-gradient-to-tr from-amber-600 to-red-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg mb-3">
               <Flame className="w-9 h-9 text-white" />
@@ -202,7 +202,6 @@ export default function App() {
             <p className="text-xs text-slate-400 mt-1">Sign in to your account or create a new one</p>
           </div>
 
-          {/* Dual-Tab Switcher */}
           <div className="grid grid-cols-2 bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800">
             <button
               onClick={() => setAuthTab('login')}
@@ -222,7 +221,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Form */}
           {authTab === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
@@ -349,15 +347,12 @@ export default function App() {
     );
   }
 
-  // 2. MAIN APP: Navigation & Content Pages
+  // 2. MAIN APP PORTAL
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans pb-16">
       {/* Top Header */}
       <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between">
-        <div 
-          onClick={() => setCurrentPage('home')}
-          className="flex items-center gap-2 cursor-pointer"
-        >
+        <div onClick={() => setCurrentPage('home')} className="flex items-center gap-2 cursor-pointer">
           <Flame className="w-6 h-6 text-red-500 fill-red-500" />
           <h1 className="text-lg font-black tracking-wider text-amber-500">XD LAKA STORE</h1>
         </div>
@@ -390,7 +385,6 @@ export default function App() {
             <p className="text-xs text-slate-400 mt-1">Direct Escrow | Instant Credential Delivery</p>
           </div>
 
-          {/* Navigation Grid Buttons */}
           <div className="grid grid-cols-1 gap-3">
             <button
               onClick={() => setCurrentPage('budget_chart')}
@@ -407,7 +401,7 @@ export default function App() {
             </button>
 
             <a
-              href="https://t.co"
+              href="https://t.me"
               onClick={(e) => {
                 e.preventDefault();
                 alert('Opening Customer Care for Telegram Chat ID: 8511350765');
@@ -419,7 +413,6 @@ export default function App() {
             </a>
           </div>
 
-          {/* Admin Fast Controls */}
           {isAdmin && (
             <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-4 space-y-3">
               <h3 className="text-xs font-black text-red-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -504,9 +497,9 @@ export default function App() {
               .map((item) => (
                 <div key={item.id} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
                   <div className="relative">
-                    <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+                    <img src={item.image} alt="FF ID Screenshot" className="w-full h-48 object-cover" />
                     {item.sold && (
-                      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center">
                         <span className="bg-red-600 text-white font-black px-4 py-1.5 rounded-lg text-sm tracking-widest uppercase rotate-[-6deg] shadow-2xl">
                           SOLD OUT
                         </span>
@@ -516,13 +509,10 @@ export default function App() {
 
                   <div className="p-4 space-y-2">
                     <div className="flex justify-between items-start">
-                      <h4 className="font-bold text-sm text-slate-100">{item.title}</h4>
-                      <span className="text-amber-400 font-black text-base">₹{item.price}</span>
+                      <p className="font-bold text-sm text-slate-100 flex-1 pr-2">{item.description}</p>
+                      <span className="text-amber-400 font-black text-base whitespace-nowrap">₹{item.price}</span>
                     </div>
 
-                    <p className="text-xs text-slate-400 line-clamp-2">{item.details}</p>
-
-                    {/* Admin Sold Status Switch */}
                     {isAdmin && (
                       <div className="pt-2 border-t border-slate-800 flex justify-end">
                         <button
@@ -538,7 +528,6 @@ export default function App() {
                       </div>
                     )}
 
-                    {/* Pay Button */}
                     <button
                       disabled={item.sold}
                       onClick={() => {
@@ -604,6 +593,129 @@ export default function App() {
         </div>
       )}
 
+      {/* ADMIN LIST ID MODAL: 1 DESCRIPTION + ADD FAKEMAIL + PREVIEW POPUP */}
+      {showListModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-3">
+            <h3 className="font-black text-sm text-amber-500">LIST FREE FIRE ID (ADMIN)</h3>
+            
+            <input
+              type="number"
+              required
+              placeholder="Price in INR (e.g. 1500)"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+            />
+
+            <div>
+              <label className="text-[10px] font-bold text-slate-400 block mb-1">Pick Screenshot From Gallery</label>
+              <input
+                type="file"
+                accept="image/*"
+                required
+                onChange={(e) => handleFileUpload(e, setNewImageBase64)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-amber-500 file:text-slate-950"
+              />
+            </div>
+
+            {/* Single Description Box */}
+            <div>
+              <label className="text-[10px] font-bold text-slate-400 block mb-1">Description / Evo Guns / Level info</label>
+              <textarea
+                placeholder="Level 70, Cobra MP40 Max, Evo AK, Old Bundles, full details..."
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white h-20"
+              />
+            </div>
+
+            {/* Add Fakemail */}
+            <div>
+              <label className="text-[10px] font-bold text-slate-400 block mb-1">Add Fakemail (Unlocked after payment)</label>
+              <input
+                type="text"
+                required
+                placeholder="fakemail@domain.com / SecretPass123"
+                value={newFakemail}
+                onChange={(e) => setNewFakemail(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+              />
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!newPrice || !newDescription || !newFakemail || !newImageBase64) {
+                    return alert('Fill all fields and pick screenshot first to preview');
+                  }
+                  setShowPreviewModal(true);
+                }}
+                className="flex-1 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl text-xs"
+              >
+                👁 Preview Post
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmAndPublish}
+                className="flex-1 bg-amber-500 text-slate-950 font-bold py-2 rounded-xl text-xs"
+              >
+                Confirm & List ID
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowListModal(false)}
+                className="bg-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl text-xs"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* POST PREVIEW POPUP MODAL */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl space-y-3 p-4">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-black text-amber-500">POST PREVIEW</span>
+              <button onClick={() => setShowPreviewModal(false)} className="text-slate-400 text-xs">✕ Close</button>
+            </div>
+
+            <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950">
+              <img src={newImageBase64} alt="Preview" className="w-full h-44 object-cover" />
+              <div className="p-3 space-y-2">
+                <div className="flex justify-between items-start">
+                  <p className="font-bold text-xs text-slate-100">{newDescription}</p>
+                  <span className="text-amber-400 font-black text-sm whitespace-nowrap ml-2">₹{newPrice}</span>
+                </div>
+                <div className="bg-slate-900 p-2 rounded text-[10px] text-slate-400 font-mono">
+                  <span className="text-amber-500 font-bold block">Fakemail (Buyer sees after payment):</span>
+                  {newFakemail}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={handleConfirmAndPublish}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs"
+              >
+                ✅ Confirm & Publish
+              </button>
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="bg-slate-800 text-slate-300 font-bold px-4 py-2.5 rounded-xl text-xs"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* LOCKED UPI CHECKOUT MODAL */}
       {selectedID && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -616,7 +728,6 @@ export default function App() {
             {!paymentStatus && (
               <div className="space-y-4 text-center">
                 <div className="bg-white p-3 rounded-2xl inline-block shadow-xl">
-                  {/* UPI QR locked to user UPI ID 7978404391@fam */}
                   <QRCodeSVG
                     value={`upi://pay?pa=7978404391@fam&pn=Xd+Laka+Store&am=${selectedID.price}&cu=INR&tn=XD_ID_${selectedID.id}`}
                     size={200}
@@ -655,7 +766,6 @@ export default function App() {
                 <h4 className="font-bold text-sm text-slate-200">Verifying Payment With Admin...</h4>
                 <p className="text-xs text-slate-400">UTR: <span className="text-white font-mono">{utrInput}</span></p>
 
-                {/* Instant Verification Decision for Admin */}
                 <div className="bg-slate-950 border border-slate-800 p-3 rounded-xl mt-4 text-left">
                   <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Admin Approval Action</span>
                   <div className="flex gap-2">
@@ -680,10 +790,10 @@ export default function App() {
               <div className="text-center py-4 space-y-3">
                 <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
                 <h4 className="font-bold text-base text-emerald-400">Payment Verified ✅</h4>
-                <p className="text-xs text-slate-300">Here are the Free Fire ID login details. Save them immediately:</p>
+                <p className="text-xs text-slate-300">Here are your Free Fire ID Fakemail credentials. Save them immediately:</p>
                 <div className="bg-slate-950 border border-emerald-500/40 p-3 rounded-xl text-left select-all">
-                  <p className="text-[10px] text-slate-400 font-bold mb-1">GMAIL & PASSWORD:</p>
-                  <code className="text-xs text-emerald-300 font-mono break-all">{selectedID.credentials}</code>
+                  <p className="text-[10px] text-slate-400 font-bold mb-1">FAKEMAIL & PASSWORD:</p>
+                  <code className="text-xs text-emerald-300 font-mono break-all">{selectedID.fakemail}</code>
                 </div>
               </div>
             )}
@@ -705,74 +815,7 @@ export default function App() {
         </div>
       )}
 
-      {/* ADMIN LIST ID MODAL (DIRECT GALLERY UPLOAD) */}
-      {showListModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
-          <form onSubmit={handleCreateListing} className="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-3">
-            <h3 className="font-black text-sm text-amber-500">LIST FREE FIRE ID (ADMIN)</h3>
-            
-            <input
-              type="text"
-              required
-              placeholder="Title (e.g. Level 70, Cobra MP40)"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-            />
-            <input
-              type="number"
-              required
-              placeholder="Price in INR (e.g. 1500)"
-              value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-            />
-
-            {/* Direct Mobile Gallery Upload */}
-            <div>
-              <label className="text-[10px] font-bold text-slate-400 block mb-1">Pick Screenshot From Gallery</label>
-              <input
-                type="file"
-                accept="image/*"
-                required
-                onChange={(e) => handleFileUpload(e, setNewImageBase64)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-amber-500 file:text-slate-950"
-              />
-            </div>
-
-            <textarea
-              placeholder="Details / Evo Guns / Level info..."
-              value={newDetails}
-              onChange={(e) => setNewDetails(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white h-16"
-            />
-
-            <input
-              type="text"
-              required
-              placeholder="Gmail & Password (unlocked after payment)"
-              value={newCreds}
-              onChange={(e) => setNewCreds(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
-            />
-
-            <div className="flex gap-2 pt-2">
-              <button type="submit" className="flex-1 bg-amber-500 text-slate-950 font-bold py-2 rounded-xl text-xs">
-                Confirm & List ID
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowListModal(false)}
-                className="bg-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl text-xs"
-              >
-                Back
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* ADMIN POST PROOF MODAL (DIRECT GALLERY UPLOAD) */}
+      {/* ADMIN POST PROOF MODAL */}
       {showProofModal && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
           <form onSubmit={handleCreateProof} className="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-3">
