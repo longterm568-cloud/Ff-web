@@ -6,12 +6,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>XD LAKA STORE | Free Fire ID Sell</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons CDN -->
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- QR Code Generator CDN -->
+  <!-- QR Code Generator -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Firestore Project Config: ff-web-3916b
+    const firebaseConfig = {
+      apiKey: "AIzaSyDccB-z428DgB0x9k8O0c_s29bQYf9_sA",
+      authDomain: "ff-web-3916b.firebaseapp.com",
+      projectId: "ff-web-3916b",
+      storageBucket: "ff-web-3916b.firebasestorage.app",
+      messagingSenderId: "999722248975",
+      appId: "1:999722248975:web:6b9075e7a91599504cb0e7",
+      measurementId: "G-T7CJH7GM7V"
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Expose Firestore methods globally for realtime DOM manipulation
+      window.fDb = db;
+      window.fCollection = collection;
+      window.fAddDoc = addDoc;
+      window.fOnSnapshot = onSnapshot;
+      window.fDoc = doc;
+      window.fDeleteDoc = deleteDoc;
+      window.fUpdateDoc = updateDoc;
+      window.fQuery = query;
+      window.fOrderBy = orderBy;
+      window.isFirebaseReady = true;
+
+      if (window.initCloudSync) {
+        window.initCloudSync();
+      }
+    } catch (err) {
+      console.warn("Firebase initialization notice:", err);
+    }
+  </script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Rajdhani:wght@600;700;800&display=swap');
@@ -37,7 +78,6 @@
 
   <div id="app" class="w-full max-w-md mx-auto min-h-screen flex flex-col relative bg-slate-950 pb-20 sm:border-x sm:border-slate-800 shadow-2xl">
     
-    <!-- TOP STICKY HEADER -->
     <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between">
       <div onclick="navigateTo('home')" class="flex items-center gap-2 cursor-pointer">
         <i data-lucide="flame" class="w-6 h-6 text-red-500 fill-red-500"></i>
@@ -57,7 +97,6 @@
       </div>
     </header>
 
-    <!-- AUTHENTICATION GATEKEEPER VIEW -->
     <section id="view-auth" class="flex-1 flex flex-col justify-center px-4 py-8">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <div class="text-center mb-6">
@@ -65,10 +104,9 @@
             <i data-lucide="flame" class="w-9 h-9 text-white fill-white"></i>
           </div>
           <h2 class="text-2xl font-black tracking-wide font-gaming text-white uppercase">Welcome to XD Laka Store</h2>
-          <p class="text-xs text-slate-400 mt-1">Sign in once to stay logged in permanently on this device</p>
+          <p class="text-xs text-slate-400 mt-1">Sign in once to stay logged in permanently</p>
         </div>
 
-        <!-- Auth Tabs Switcher -->
         <div class="grid grid-cols-2 bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800">
           <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="py-2 text-xs font-black rounded-lg transition flex items-center justify-center gap-1.5 bg-red-600 text-white shadow-md">
             <i data-lucide="lock" class="w-3.5 h-3.5"></i> Login
@@ -78,7 +116,7 @@
           </button>
         </div>
 
-        <!-- LOGIN FORM -->
+        <!-- Login Form -->
         <form id="form-login" onsubmit="processLogin(event)" class="space-y-4">
           <div>
             <label class="text-xs font-bold text-slate-300 block mb-1">Username / Email</label>
@@ -102,13 +140,13 @@
           </button>
         </form>
 
-        <!-- REGISTER FORM -->
+        <!-- Register Form -->
         <form id="form-register" onsubmit="processRegister(event)" class="space-y-3 hidden">
           <div class="grid grid-cols-2 gap-2">
             <input type="text" id="regFirstName" required placeholder="First name" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
             <input type="text" id="regLastName" required placeholder="Last name" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           </div>
-          <input type="text" id="regUsername" required placeholder="Choose username" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
+          <input type="text" id="regUsername" required placeholder="Choose unique username" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           <input type="email" id="regEmail" required placeholder="Email address" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
           
           <div class="relative">
@@ -126,8 +164,8 @@
       </div>
     </section>
 
-    <!-- VIEW: HOME PAGE -->
     <main id="view-home" class="hidden flex-1 px-4 py-5 space-y-5">
+      <!-- Hero Banner -->
       <div class="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/90 rounded-3xl p-5 shadow-2xl text-center space-y-3">
         <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-3 py-1 rounded-full uppercase tracking-wider">
           <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Trusted & Safe
@@ -156,7 +194,7 @@
         </button>
       </div>
 
-      <!-- Quick Action Navigation -->
+      <!-- Quick Action Navigation (Proof & Telegram to +91 79784 04391) -->
       <div class="grid grid-cols-2 gap-3">
         <button onclick="navigateTo('proofs')" class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl font-bold text-xs text-slate-200 flex items-center justify-center gap-2 hover:border-slate-700 shadow">
           <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Customer Proofs (<span id="proofCountBadge">0</span>)
@@ -166,7 +204,7 @@
         </button>
       </div>
 
-      <!-- Admin Control Panel -->
+      <!-- Admin Fast Controls (Rendered when logged in as admin) -->
       <div id="adminPanelBox" class="hidden bg-slate-900 border border-red-500/30 rounded-2xl p-4 space-y-3">
         <div class="flex items-center justify-between">
           <h3 class="text-xs font-black text-red-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -184,7 +222,7 @@
         </div>
       </div>
 
-      <!-- FEATURE: POSTED IDS SHOW ON HOME SCREEN AT BOTTOM -->
+      <!-- Live Home Page Free Fire ID Listings -->
       <div class="pt-4 border-t border-slate-800/80 space-y-3">
         <div class="flex justify-between items-center px-1">
           <div class="flex items-center gap-1.5">
@@ -198,7 +236,6 @@
       </div>
     </main>
 
-    <!-- VIEW: BUDGET CATEGORIES CHART -->
     <section id="view-budget-chart" class="hidden flex-1 px-4 py-5 space-y-4">
       <button onclick="navigateTo('home')" class="text-xs text-slate-400 flex items-center gap-1 font-bold mb-1">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home
@@ -211,7 +248,6 @@
       <div id="budgetCategoryList" class="space-y-2.5"></div>
     </section>
 
-    <!-- VIEW: BUDGET SHOWCASE ITEMS -->
     <section id="view-budget-view" class="hidden flex-1 px-4 py-5 space-y-4">
       <button onclick="navigateTo('budget_chart')" class="text-xs text-slate-400 flex items-center gap-1 font-bold mb-1">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Budget Chart
@@ -228,7 +264,6 @@
       <div id="showcaseContainer" class="space-y-5"></div>
     </section>
 
-    <!-- VIEW: CUSTOMER TRANSACTION PROOFS -->
     <section id="view-proofs" class="hidden flex-1 px-4 py-5 space-y-4">
       <button onclick="navigateTo('home')" class="text-xs text-slate-400 flex items-center gap-1 font-bold mb-1">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home
@@ -247,7 +282,6 @@
       <div id="proofsContainer" class="space-y-4"></div>
     </section>
 
-    <!-- FOOTER -->
     <footer id="appFooter" class="mt-8 border-t border-slate-900 bg-slate-950 px-4 py-6 text-center space-y-4">
       <div class="grid grid-cols-2 gap-3 text-left max-w-md mx-auto">
         <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80">
@@ -271,7 +305,6 @@
       <p class="text-[10px] text-slate-600">© 2026 Free Fire ID Sell. All rights reserved.</p>
     </footer>
 
-    <!-- LOCKED UPI CHECKOUT MODAL -->
     <div id="checkoutModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-3">
@@ -298,19 +331,19 @@
           </button>
         </div>
 
-        <!-- Step 2: Verification Pending with WhatsApp link -->
+        <!-- Step 2: Verification Pending with WhatsApp Link -->
         <div id="checkoutStepPending" class="hidden text-center py-5 space-y-3">
           <div class="animate-spin w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full mx-auto"></div>
           <h4 class="font-bold text-sm text-slate-200">Payment Submitted for Verification!</h4>
           <p class="text-xs text-slate-300 leading-relaxed">
-            Please message our store on WhatsApp with your UTR to instantly receive your Login OTP & Account Details.
+            Please message our store on WhatsApp with your UTR to receive your Login OTP & Account Details.
           </p>
 
           <a id="whatsappOtpLink" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg">
             <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> Message on WhatsApp for OTP
           </a>
 
-          <!-- Admin Simulation Control -->
+          <!-- Admin Approval Action Simulation -->
           <div id="adminApproveSection" class="bg-slate-950 border border-slate-800 p-3 rounded-xl mt-4 text-left">
             <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Admin Approval Action (Simulation)</span>
             <div class="flex gap-2">
@@ -324,32 +357,19 @@
           </div>
         </div>
 
-        <!-- Step 3: Approved Credentials Display with Prominent 'GET OTP' Button -->
+        <!-- Step 3: Approved Credentials & GET OTP Direct Route -->
         <div id="checkoutStepApproved" class="hidden text-center py-4 space-y-3">
           <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-500 mx-auto"></i>
           <h4 class="font-bold text-base text-emerald-400">Payment Verified ✅</h4>
-          <p class="text-xs text-slate-300">Your Free Fire ID Fakemail credentials provided by admin:</p>
-          
-          <!-- Exact Fakemail from ID Post -->
-          <div class="bg-slate-950 border border-emerald-500/40 p-3.5 rounded-2xl text-left select-all">
-            <div class="flex items-center justify-between mb-1">
-              <p class="text-[10px] text-slate-400 font-bold uppercase">FAKEMAIL & PASSWORD:</p>
-              <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded font-mono">Ready to Login</span>
-            </div>
-            <code id="revealedCredentials" class="text-xs text-emerald-300 font-mono break-all font-bold block bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"></code>
+          <p class="text-xs text-slate-300">Here are your Free Fire ID Fakemail credentials. Save them immediately:</p>
+          <div class="bg-slate-950 border border-emerald-500/40 p-3 rounded-xl text-left select-all">
+            <p class="text-[10px] text-slate-400 font-bold mb-1">FAKEMAIL & PASSWORD:</p>
+            <code id="revealedCredentials" class="text-xs text-emerald-300 font-mono break-all font-bold"></code>
           </div>
 
-          <!-- Notice & Direct WhatsApp OTP Button -->
-          <div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-2xl text-left space-y-2">
-            <div class="flex items-center gap-1.5 text-amber-400 font-bold text-xs">
-              <i data-lucide="key" class="w-3.5 h-3.5"></i>
-              <span>Login OTP Required</span>
-            </div>
-            <p class="text-[11px] text-slate-300 leading-snug">
-              To complete the login with this account, tap the button below to get your Login OTP instantly from admin on WhatsApp.
-            </p>
-            
-            <a id="directGetOtpWhatsappBtn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg tracking-wide uppercase transition transform active:scale-95">
+          <!-- Direct GET OTP Button leading to wa.me/917978404391 -->
+          <div class="pt-2">
+            <a id="getOtpWhatsappBtn" href="https://wa.me/917978404391" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg tracking-wide uppercase transition transform active:scale-95">
               <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> GET OTP (+91 7978404391)
             </a>
           </div>
@@ -367,14 +387,13 @@
       </div>
     </div>
 
-    <!-- ADMIN LIST ID MODAL WITH 10+ PHOTO BATCH UPLOAD -->
     <div id="listModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
       <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-5 space-y-3 max-h-[90vh] overflow-y-auto">
         <h3 class="font-black text-sm text-amber-500 font-gaming uppercase tracking-wider">LIST FREE FIRE ID (ADMIN)</h3>
         
         <input type="number" id="newListingPrice" required placeholder="Price in INR (e.g. 1500)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
 
-        <!-- 10+ Photo Batch Adder Box with Canvas Compression -->
+        <!-- 10+ Photo Batch Adder Box with HTML5 Canvas Compression -->
         <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-3 space-y-2">
           <div class="flex justify-between items-center">
             <label class="text-[11px] font-bold text-slate-200">
@@ -386,15 +405,13 @@
           <input type="file" id="batchPhotoInput" accept="image/*" multiple onchange="handleBatchPhotoUpload(event)" class="hidden">
           
           <button type="button" onclick="document.getElementById('batchPhotoInput').click()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 border border-dashed border-amber-500/60 rounded-xl text-amber-400 font-bold text-xs flex items-center justify-center gap-1.5 transition">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> + Add More Photos (Tap multiple times to add 10+)
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> + Add Photos (Tap multiple times to add 10+)
           </button>
 
-          <!-- Compression progress indicator -->
           <div id="photoCompressionSpinner" class="hidden text-center py-1">
             <span class="text-[10px] text-amber-400 animate-pulse font-mono">Compressing & optimizing photos...</span>
           </div>
 
-          <!-- Multi-Thumbnail Gallery Strip with individual delete buttons -->
           <div id="multiThumbnailsList" class="flex gap-2 overflow-x-auto py-1 no-scrollbar min-h-[50px] items-center">
             <span id="noPhotosYetMsg" class="text-[10px] text-slate-500 italic">No photos added yet. Tap button above to add 10+ screenshots.</span>
           </div>
@@ -414,7 +431,7 @@
           <button type="button" onclick="previewPostPopup()" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl text-xs">
             👁 Preview Post
           </button>
-          <button type="button" onclick="confirmAndSaveListing()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-xl text-xs">
+          <button type="button" id="confirmListBtn" onclick="confirmAndSaveListing()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-xl text-xs">
             Confirm & List
           </button>
           <button type="button" onclick="closeModal('listModal')" class="bg-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl text-xs">
@@ -424,7 +441,6 @@
       </div>
     </div>
 
-    <!-- POST PREVIEW MODAL -->
     <div id="previewModal" class="hidden fixed inset-0 z-60 bg-black/90 flex items-center justify-center p-4">
       <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl space-y-3 p-4">
         <div class="flex justify-between items-center">
@@ -458,7 +474,6 @@
       </div>
     </div>
 
-    <!-- ADMIN POST PROOF MODAL -->
     <div id="proofModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
       <form onsubmit="handlePublishProof(event)" class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-5 space-y-3">
         <h3 class="font-black text-sm text-emerald-400 font-gaming uppercase tracking-wider">POST NEW PROOF (ADMIN)</h3>
@@ -468,7 +483,7 @@
           <input type="file" id="proofInputFile" accept="image/*" required onchange="handleProofFileSelect(event)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-emerald-500 file:text-slate-950">
         </div>
         <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 rounded-xl text-xs">
+          <button type="submit" id="confirmProofBtn" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 rounded-xl text-xs">
             Publish Proof
           </button>
           <button type="button" onclick="closeModal('proofModal')" class="bg-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl text-xs">
@@ -481,11 +496,10 @@
   </div>
 
   <script>
-    // System Constants
     const ADMIN_PIN = "xdadmin123";
     const OWNER_SECRET_KEY = "xdowner999";
     const WHATSAPP_PHONE = "917978404391";
-    const TELEGRAM_CHAT_ID = "8511350765";
+    const TELEGRAM_PHONE_LINK = "https://t.me/+917978404391";
 
     const BUDGET_CATEGORIES = [
       { id: '1-500', label: '1 RS TO 500 RS', min: 1, max: 500 },
@@ -495,13 +509,11 @@
       { id: '10000-plus', label: 'MORE THAN 10,000 RS', min: 10000, max: 9999999 }
     ];
 
-    // Reactive State
     let currentUser = null;
     let isAdmin = false;
     let currentView = 'home';
     let selectedBudget = null;
     let currentSelectedIdForPayment = null;
-    let currentSubmittedUTR = "";
 
     let listings = [];
     let proofs = [];
@@ -510,78 +522,69 @@
     let tempProofScreenshot = "";
     let carouselIndexTracker = {};
 
-    // Initialization
     window.onload = function() {
-      loadPermanentData();
+      // Check permanent session in local cache
+      const storedUser = localStorage.getItem('xd_permanent_user');
+      const storedAdmin = localStorage.getItem('xd_admin');
+      if (storedUser) currentUser = JSON.parse(storedUser);
+      if (storedAdmin === 'true') isAdmin = true;
+
+      // Fallback cache if offline
+      loadLocalCache();
+
+      if (window.isFirebaseReady) {
+        window.initCloudSync();
+      }
       renderApp();
     };
 
-    function loadPermanentData() {
+    function loadLocalCache() {
       try {
-        const storedUser = localStorage.getItem('xd_permanent_user');
-        const storedAdmin = localStorage.getItem('xd_admin');
-        const storedListings = localStorage.getItem('xd_listings');
-        const storedProofs = localStorage.getItem('xd_proofs');
-
-        if (storedUser) currentUser = JSON.parse(storedUser);
-        if (storedAdmin === 'true') isAdmin = true;
-
-        if (storedListings) {
-          listings = JSON.parse(storedListings);
-        } else {
-          // Default Starter Listing
-          listings = [
-            {
-              id: 1001,
-              price: 2400,
-              description: 'Level 72 | Cobra MP40 Max | 5 Evo Weapons | Old Rare Bundles | Verified Gmail',
-              fakemail: 'xd_customer72@fakemail.com / Pass@9911',
-              images: [
-                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80',
-                'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=80'
-              ],
-              sold: false
-            }
-          ];
-          saveListings();
-        }
-
-        if (storedProofs) {
-          proofs = JSON.parse(storedProofs);
-        } else {
-          proofs = [
-            {
-              id: 501,
-              title: 'Sold Level 70 ID to Rohit (₹4,500)',
-              image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80',
-              date: '03/10/2026'
-            }
-          ];
-          saveProofs();
-        }
+        const cachedListings = localStorage.getItem('xd_cache_listings');
+        const cachedProofs = localStorage.getItem('xd_cache_proofs');
+        if (cachedListings) listings = JSON.parse(cachedListings);
+        if (cachedProofs) proofs = JSON.parse(cachedProofs);
       } catch (e) {
-        console.error("Storage load error:", e);
+        console.warn("Local cache notice:", e);
       }
     }
 
-    function saveListings() {
-      try {
-        localStorage.setItem('xd_listings', JSON.stringify(listings));
-      } catch (e) {
-        alert('Storage limit reached! Please delete older posts before adding more.');
-      }
-    }
+    // Realtime Cloud Listener connecting Firebase to every device
+    window.initCloudSync = function() {
+      if (!window.fDb) return;
 
-    function saveProofs() {
-      try {
-        localStorage.setItem('xd_proofs', JSON.stringify(proofs));
-      } catch (e) {
-        console.error(e);
-      }
-    }
+      // Realtime Listings Listener
+      const qListings = window.fQuery(window.fCollection(window.fDb, 'listings'), window.fOrderBy('timestamp', 'desc'));
+      window.fOnSnapshot(qListings, (snapshot) => {
+        listings = snapshot.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+        try {
+          localStorage.setItem('xd_cache_listings', JSON.stringify(listings));
+        } catch (e) {}
+        renderApp();
+      }, (err) => {
+        console.warn("Firestore listings sync notice:", err);
+      });
 
-    // Canvas Image Compressor (Compreses 4MB phone images to ~30-40KB)
-    function compressImageFile(file, maxWidth = 800, quality = 0.6) {
+      // Realtime Proofs Listener
+      const qProofs = window.fQuery(window.fCollection(window.fDb, 'proofs'), window.fOrderBy('timestamp', 'desc'));
+      window.fOnSnapshot(qProofs, (snapshot) => {
+        proofs = snapshot.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+        try {
+          localStorage.setItem('xd_cache_proofs', JSON.stringify(proofs));
+        } catch (e) {}
+        renderApp();
+      }, (err) => {
+        console.warn("Firestore proofs sync notice:", err);
+      });
+    };
+
+    function compressImageFile(file, maxWidth = 750, quality = 0.6) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -602,15 +605,12 @@
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-
-            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-            resolve(compressedBase64);
+            resolve(canvas.toDataURL('image/jpeg', quality));
           };
         };
       });
     }
 
-    // Batch photo upload handler (Permits 10, 15, 20+ photos)
     async function handleBatchPhotoUpload(e) {
       const files = Array.from(e.target.files);
       if (!files.length) return;
@@ -659,7 +659,7 @@
     async function handleProofFileSelect(e) {
       const file = e.target.files[0];
       if (file) {
-        tempProofScreenshot = await compressImageFile(file, 800, 0.7);
+        tempProofScreenshot = await compressImageFile(file, 750, 0.65);
       }
     }
 
@@ -681,7 +681,7 @@
       openModal('previewModal');
     }
 
-    function confirmAndSaveListing() {
+    async function confirmAndSaveListing() {
       const price = document.getElementById('newListingPrice').value;
       const desc = document.getElementById('newListingDescription').value;
       const fakemail = document.getElementById('newListingFakemail').value;
@@ -690,81 +690,132 @@
         return alert('Please fill Price, Description, Fakemail, and pick at least 1 Photo.');
       }
 
-      const newId = {
+      const btn = document.getElementById('confirmListBtn');
+      btn.innerText = 'Uploading to Cloud...';
+      btn.disabled = true;
+
+      const newIdData = {
         id: Date.now(),
         price: Number(price),
         description: desc,
         fakemail: fakemail,
         images: [...tempListingScreenshots],
-        sold: false
+        sold: false,
+        timestamp: Date.now()
       };
 
-      listings.unshift(newId);
-      saveListings();
+      try {
+        if (window.fDb) {
+          await window.fAddDoc(window.fCollection(window.fDb, 'listings'), newIdData);
+        } else {
+          listings.unshift(newIdData);
+          renderApp();
+        }
 
-      tempListingScreenshots = [];
-      document.getElementById('newListingPrice').value = '';
-      document.getElementById('newListingDescription').value = '';
-      document.getElementById('newListingFakemail').value = '';
-      renderMultiThumbnails();
-      
-      closeModal('previewModal');
-      closeModal('listModal');
-      alert(`Free Fire ID with ${newId.images.length} screenshots successfully listed on XD Laka Store!`);
-      renderApp();
+        tempListingScreenshots = [];
+        document.getElementById('newListingPrice').value = '';
+        document.getElementById('newListingDescription').value = '';
+        document.getElementById('newListingFakemail').value = '';
+        renderMultiThumbnails();
+
+        closeModal('previewModal');
+        closeModal('listModal');
+        alert('Free Fire ID successfully published to Cloud! Visible on all phones now.');
+      } catch (err) {
+        alert('Upload Error: ' + err.message);
+      } finally {
+        btn.innerText = 'Confirm & List';
+        btn.disabled = false;
+      }
     }
 
-    // Admin Delete Listing Post
-    function deleteListing(id) {
+    // Admin Delete Listing Post from Cloud
+    async function deleteListing(docId, id) {
       if (!isAdmin) return alert('Admin access required.');
-      const confirmDelete = confirm('Are you sure you want to permanently delete this Free Fire ID?');
-      if (confirmDelete) {
-        listings = listings.filter(item => item.id !== id);
-        saveListings();
-        renderApp();
-        alert('Listing deleted successfully!');
+      const confirmDelete = confirm('Are you sure you want to permanently delete this Free Fire ID post from all devices?');
+      if (!confirmDelete) return;
+
+      try {
+        if (window.fDb && docId) {
+          await window.fDeleteDoc(window.fDoc(window.fDb, 'listings', docId));
+        } else {
+          listings = listings.filter(item => item.id !== id);
+          renderApp();
+        }
+        alert('Listing deleted from all devices successfully!');
+      } catch (err) {
+        alert('Delete error: ' + err.message);
       }
     }
 
-    // Admin Delete Proof
-    function deleteProof(id) {
-      if (!isAdmin) return alert('Admin access required.');
-      const confirmDelete = confirm('Are you sure you want to permanently delete this Customer Proof?');
-      if (confirmDelete) {
-        proofs = proofs.filter(item => item.id !== id);
-        saveProofs();
-        renderApp();
-        alert('Customer Proof deleted successfully!');
+    // Toggle Sold Status
+    async function toggleSoldStatus(docId, currentSoldState) {
+      try {
+        if (window.fDb && docId) {
+          await window.fUpdateDoc(window.fDoc(window.fDb, 'listings', docId), {
+            sold: !currentSoldState
+          });
+        }
+      } catch (err) {
+        alert('Update error: ' + err.message);
       }
     }
 
-    function toggleSoldStatus(id) {
-      const item = listings.find(i => i.id === id);
-      if (item) {
-        item.sold = !item.sold;
-        saveListings();
-        renderApp();
-      }
-    }
-
-    function handlePublishProof(e) {
+    // Save Customer Proof to Cloud
+    async function handlePublishProof(e) {
       e.preventDefault();
       const title = document.getElementById('proofInputTitle').value;
       if (!tempProofScreenshot) return alert('Please pick a proof screenshot!');
 
-      proofs.unshift({
+      const btn = document.getElementById('confirmProofBtn');
+      btn.innerText = 'Publishing...';
+      btn.disabled = true;
+
+      const proofData = {
         id: Date.now(),
         title: title,
         image: tempProofScreenshot,
-        date: new Date().toLocaleDateString()
-      });
-      saveProofs();
+        date: new Date().toLocaleDateString(),
+        timestamp: Date.now()
+      };
 
-      document.getElementById('proofInputTitle').value = '';
-      tempProofScreenshot = '';
-      closeModal('proofModal');
-      alert('Customer Proof posted successfully!');
-      renderApp();
+      try {
+        if (window.fDb) {
+          await window.fAddDoc(window.fCollection(window.fDb, 'proofs'), proofData);
+        } else {
+          proofs.unshift(proofData);
+          renderApp();
+        }
+
+        document.getElementById('proofInputTitle').value = '';
+        tempProofScreenshot = '';
+        closeModal('proofModal');
+        alert('Customer Proof published to all devices successfully!');
+      } catch (err) {
+        alert('Proof Upload Error: ' + err.message);
+      } finally {
+        btn.innerText = 'Publish Proof';
+        btn.disabled = false;
+      }
+    }
+
+    // Admin Delete Customer Proof from Cloud
+    async function deleteProof(docId, id) {
+      if (!isAdmin) return alert('Admin access required.');
+      const confirmDelete = confirm('Are you sure you want to permanently delete this Customer Proof?');
+      if (!confirmDelete) return;
+
+      try {
+        if (window.fDb && docId) {
+          await window.fDeleteDoc(window.fDoc(window.fDb, 'proofs', docId));
+        } else {
+          proofs = proofs.filter(p => p.id !== id);
+          renderApp();
+        }
+        alert('Proof deleted from all devices successfully!');
+      } catch (err) {
+        alert('Delete error: ' + err.message);
+      }
     }
 
     function switchAuthTab(tab) {
@@ -862,12 +913,11 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Telegram Help Function bound directly to +91 79784 04391
     function openTelegram() {
-      alert(`Customer Care Telegram ID: ${TELEGRAM_CHAT_ID}\nOpening support chat...`);
-      window.open(`https://t.me/xdlakastore`, '_blank');
+      window.open(TELEGRAM_PHONE_LINK, '_blank');
     }
 
-    // Card Renderer with Carousel & Admin Delete/Sold options
     function generateIdCardHTML(item) {
       const imgs = (item.images && item.images.length > 0) ? item.images : [item.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80'];
       const currentIndex = carouselIndexTracker[item.id] || 0;
@@ -879,10 +929,10 @@
             <img id="carousel-img-${item.id}" src="${currentImg}" class="w-full h-full object-cover">
             
             ${imgs.length > 1 ? `
-              <button onclick="shiftCarousel(${item.id}, -1, ${imgs.length})" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 p-1.5 rounded-full text-white">
+              <button onclick="shiftCarousel('${item.id}', -1, ${imgs.length})" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 p-1.5 rounded-full text-white">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
               </button>
-              <button onclick="shiftCarousel(${item.id}, 1, ${imgs.length})" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 p-1.5 rounded-full text-white">
+              <button onclick="shiftCarousel('${item.id}', 1, ${imgs.length})" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 p-1.5 rounded-full text-white">
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
               </button>
               <div id="carousel-count-${item.id}" class="absolute bottom-2 right-2 bg-black/75 px-2 py-0.5 rounded-md text-[10px] font-mono">
@@ -907,16 +957,16 @@
 
             ${isAdmin ? `
               <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
-                <button onclick="deleteListing(${item.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
+                <button onclick="deleteListing('${item.docId || ''}', ${item.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
                   <i data-lucide="trash-2" class="w-3 h-3"></i> Delete Post
                 </button>
-                <button onclick="toggleSoldStatus(${item.id})" class="text-[10px] font-black px-3 py-1 rounded-md border ${item.sold ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-red-950/60 text-red-400 border-red-800'}">
+                <button onclick="toggleSoldStatus('${item.docId || ''}', ${item.sold})" class="text-[10px] font-black px-3 py-1 rounded-md border ${item.sold ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-red-950/60 text-red-400 border-red-800'}">
                   ${item.sold ? 'Mark Available' : 'Mark as Sold'}
                 </button>
               </div>
             ` : ''}
 
-            <button ${item.sold ? 'disabled' : ''} onclick="openCheckout(${item.id})" class="w-full py-2.5 rounded-xl text-xs font-black transition mt-2 ${item.sold ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md font-gaming text-sm'}">
+            <button ${item.sold ? 'disabled' : ''} onclick="openCheckout('${item.id}')" class="w-full py-2.5 rounded-xl text-xs font-black transition mt-2 ${item.sold ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md font-gaming text-sm'}">
               ${item.sold ? 'ID SOLD OUT ❌' : `PAY ₹${item.price} NOW`}
             </button>
           </div>
@@ -924,7 +974,6 @@
       `;
     }
 
-    // Carousel Image Next / Prev
     function shiftCarousel(itemId, delta, max) {
       if (!carouselIndexTracker[itemId]) carouselIndexTracker[itemId] = 0;
       let next = carouselIndexTracker[itemId] + delta;
@@ -934,7 +983,7 @@
       
       const imgElem = document.getElementById(`carousel-img-${itemId}`);
       const counterElem = document.getElementById(`carousel-count-${itemId}`);
-      const item = listings.find(i => i.id === itemId);
+      const item = listings.find(i => String(i.id) === String(itemId));
       const imgs = (item && item.images && item.images.length > 0) ? item.images : [item.image];
       if (imgElem && imgs[next]) {
         imgElem.src = imgs[next];
@@ -1006,7 +1055,6 @@
       lucide.createIcons();
     }
 
-    // Render all posted IDs directly on the Home Screen at the bottom
     function renderHomeIdList() {
       const container = document.getElementById('homeIdListContainer');
       document.getElementById('homeTotalIdsBadge').innerText = `${listings.length} IDs Available`;
@@ -1064,7 +1112,7 @@
       lucide.createIcons();
     }
 
-    // Customer Proofs with Admin Delete Proof Option
+    // Customer Proofs Renderer with Proof Delete Option for Admin
     function renderCustomerProofs() {
       const container = document.getElementById('proofsContainer');
       container.innerHTML = '';
@@ -1083,11 +1131,10 @@
             <span class="font-bold text-slate-200">${p.title}</span>
             <span class="text-[10px] text-slate-500">${p.date}</span>
           </div>
-
           ${isAdmin ? `
             <div class="pt-2 border-t border-slate-800 flex justify-end">
-              <button onclick="deleteProof(${p.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
-                <i data-lucide="trash-2" class="w-3 h-3"></i> Delete Proof
+              <button onclick="deleteProof('${p.docId || ''}', ${p.id})" class="text-[10px] font-black px-2.5 py-1 rounded-md bg-red-950/80 text-rose-400 border border-red-800 flex items-center gap-1 hover:bg-red-900 transition">
+                <i data-lucide="trash-2" class="w-3 h-3"></i> Delete Proof 🗑️
               </button>
             </div>
           ` : ''}
@@ -1098,7 +1145,7 @@
     }
 
     function openCheckout(itemId) {
-      const item = listings.find(i => i.id === itemId);
+      const item = listings.find(i => String(i.id) === String(itemId));
       if (!item) return;
       currentSelectedIdForPayment = item;
 
@@ -1129,7 +1176,6 @@
     function submitUTRVerification() {
       const utr = document.getElementById('utrInputField').value.trim();
       if (utr.length < 8) return alert('Please enter a valid 12-digit UTR transaction number');
-      currentSubmittedUTR = utr;
 
       document.getElementById('checkoutStepQR').classList.add('hidden');
       document.getElementById('checkoutStepPending').classList.remove('hidden');
@@ -1142,13 +1188,9 @@
     function setPaymentVerdict(verdict) {
       document.getElementById('checkoutStepPending').classList.add('hidden');
       if (verdict === 'approved') {
-        // Show exact fakemail provided during post
         document.getElementById('revealedCredentials').innerText = currentSelectedIdForPayment.fakemail;
-
-        // Configure direct 'GET OTP' WhatsApp link to +917978404391
-        const otpMsg = `Hello XD Laka Store, my payment of ₹${currentSelectedIdForPayment.price} for Free Fire ID #${currentSelectedIdForPayment.id} (UTR: ${currentSubmittedUTR || 'Verified'}) is approved. Here is my fakemail: ${currentSelectedIdForPayment.fakemail}. Please send my Login OTP right now!`;
-        document.getElementById('directGetOtpWhatsappBtn').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(otpMsg)}`;
-
+        const otpMsg = `Hello XD Laka Store, my payment has been approved for Free Fire ID #${currentSelectedIdForPayment.id}. My Fakemail is: ${currentSelectedIdForPayment.fakemail}. Please send me the Login Verification OTP!`;
+        document.getElementById('getOtpWhatsappBtn').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(otpMsg)}`;
         document.getElementById('checkoutStepApproved').classList.remove('hidden');
       } else {
         document.getElementById('checkoutStepRejected').classList.remove('hidden');
@@ -1161,7 +1203,6 @@
       document.getElementById('checkoutStepQR').classList.remove('hidden');
     }
 
-    // Modal Helpers
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
       lucide.createIcons();
